@@ -1,13 +1,12 @@
-import './index.css'
-import Header from './components/layout/Header'
+import "./index.css";
+import AppLayout from "./components/layout/AppLayout";
 
 function App() {
- 
   return (
-    <>
-     <Header />
-    </>
-  )
+    <AppLayout>
+      <div className="text-sm text-muted-foreground">Your content here</div>
+    </AppLayout>
+  );
 }
 
-export default App
+export default App;
