@@ -1,10 +1,10 @@
-import "./index.css";
 import AppLayout from "./components/layout/AppLayout";
+import TaskPage from "./module/task/TaskPage";
 
 function App() {
   return (
     <AppLayout>
-      <div className="text-sm text-muted-foreground">Your content here</div>
+      <TaskPage />
     </AppLayout>
   );
 }
