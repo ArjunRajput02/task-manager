@@ -9,7 +9,6 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, taskReducer);
-console.log("storage:", storage);
 export const store = configureStore({
   reducer: {
     tasks: persistedReducer,

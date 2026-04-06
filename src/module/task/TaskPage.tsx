@@ -18,17 +18,19 @@ import {
   AlertDialogTrigger,
 } from "../../components/ui/alert-dialog";
 import type { Task } from "../../utils/types";
+import Filter from "../../components/layout/Filter";
 
 export default function TaskPage() {
   const dispatch = useDispatch();
   const { tasks, searchQuery } = useSelector((state: RootState) => state.tasks);
-  const filteredTasks = tasks.filter((t) =>
-    `${t.title} ${t.description || ""}`
+  const filteredTasks = tasks.filter((task) =>
+    `${task.title} ${task.description || ""}`
       .toLowerCase()
       .includes(searchQuery.toLowerCase().trim()),
   );
   const [open, setOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-6">
