@@ -1,15 +1,4 @@
-import {
-  LayoutDashboard,
-  CheckSquare,
-  Calendar,
-
-} from "lucide-react";
-
-const navItems = [
-  { name: "Dashboard", icon: LayoutDashboard },
-  { name: "Tasks", icon: CheckSquare },
-  { name: "Calendar", icon: Calendar },
-];
+import { navItems } from "../../utils/constant";
 
 export default function Sidebar() {
   return (
