@@ -1,10 +1,7 @@
 import { Menu, Bell, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-
-interface HeaderProps {
-  onMenuClick: () => void;
-}
+import type { HeaderProps } from "../../utils/types";
 
 export default function Header({ onMenuClick }: HeaderProps) {
   return (
