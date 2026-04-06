@@ -1,0 +1,150 @@
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTask } from "../../store/slice/taskSlice";
+import type { RootState } from "../../store/store";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent } from "../../components/ui/card";
+import { Trash2, Plus, Pencil } from "lucide-react";
+import TaskModal from "./TaskModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogTrigger,
+} from "../../components/ui/alert-dialog";
+import type { Task } from "../../utils/types";
+import Filter from "../../components/layout/Filter";
+
+export default function TaskPage() {
+  const dispatch = useDispatch();
+  const { tasks, searchQuery } = useSelector((state: RootState) => state.tasks);
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch = `${task.title} ${task.description || ""}`
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase().trim());
+
+    const matchesStatus =
+      statusFilter === "ALL" ||
+      task.status.toLowerCase().trim() === statusFilter.toLowerCase().trim();
+
+    return matchesSearch && matchesStatus;
+  });
+  const [open, setOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+
+  return (
+    <div className="p-6 max-w-3xl mx-auto space-y-6 bg-white min-h-screen rounded">
+      <Filter statusFilter={statusFilter} setStatusFilter={setStatusFilter} />
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-semibold">My Tasks</h1>
+
+        <Button
+          onClick={() => setOpen(true)}
+          className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          <Plus className="w-4 h-4" />
+          New Task
+        </Button>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-4 auto-rows-fr">
+        {filteredTasks.length === 0 && (
+          <p className="text-sm text-muted-foreground text-center col-span-full">
+            No tasks yet. Add one
+          </p>
+        )}
+
+        {filteredTasks.map((task) => (
+          <Card
+            key={task.id}
+            className="rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-lg transition-all duration-200"
+          >
+            <CardContent className="p-4 flex flex-col justify-between h-56 space-y-3 min-h-56">
+              <h2 className="text-base font-semibold text-gray-800 dark:text-white">
+                {task.title || "Untitled Task"}
+              </h2>
+
+              <span
+                className={`text-xs font-medium px-2 py-1 rounded-full self-start
+      ${
+        task.status === "done"
+          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+          : task.status === "inprogress"
+            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+            : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+      }`}
+              >
+                {task.status}
+              </span>
+
+              {task.description && (
+                <p className="text-sm text-muted-foreground line-clamp-3">
+                  {task.description}
+                </p>
+              )}
+
+              <div className="flex justify-end gap-2 pt-2 border-t">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setEditingTask(task);
+                    setOpen(true);
+                  }}
+                >
+                  <Pencil className="h-4 w-4 text-blue-500" />
+                </Button>
+
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </Button>
+                  </AlertDialogTrigger>
+
+                  <AlertDialogContent className="sm:max-w-md rounded-2xl">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Task?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your task.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+
+                    <AlertDialogFooter>
+                      <AlertDialogCancel variant="secondary" size="default">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        variant="destructive"
+                        size="default"
+                        onClick={() => dispatch(deleteTask(task.id))}
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <TaskModal
+        open={open}
+        setOpen={(val: boolean) => {
+          setOpen(val);
+          if (!val) setEditingTask(null);
+        }}
+        editingTask={editingTask}
+      />
+    </div>
+  );
+}
