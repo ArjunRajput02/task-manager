@@ -14,7 +14,7 @@ export default function Filter({
           key={status}
           variant={statusFilter === status ? "default" : "outline"}
           onClick={() => setStatusFilter(status)}
-          className="text-xs"
+          className={`text-xs ${statusFilter === status ? "bg-blue-600 hover:bg-blue-700 text-white border-blue-600" : "border-gray-300 text-gray-600 hover:bg-blue-50"}`}
         >
           {status === "InProgress" ? "In Progress" : status}
         </Button>

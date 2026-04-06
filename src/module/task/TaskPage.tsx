@@ -39,12 +39,15 @@ export default function TaskPage() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-6 ">
+    <div className="p-6 max-w-3xl mx-auto space-y-6 bg-white min-h-screen rounded">
       <Filter statusFilter={statusFilter} setStatusFilter={setStatusFilter} />
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold">My Tasks</h1>
 
-        <Button onClick={() => setOpen(true)} className="gap-2">
+        <Button
+          onClick={() => setOpen(true)}
+          className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+        >
           <Plus className="w-4 h-4" />
           New Task
         </Button>
@@ -60,7 +63,7 @@ export default function TaskPage() {
         {filteredTasks.map((task) => (
           <Card
             key={task.id}
-            className="rounded-2xl border bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-all duration-200"
+            className="rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-lg transition-all duration-200"
           >
             <CardContent className="p-4 flex flex-col justify-between h-56 space-y-3 min-h-56">
               <h2 className="text-base font-semibold text-gray-800 dark:text-white">
@@ -115,7 +118,7 @@ export default function TaskPage() {
                     </AlertDialogHeader>
 
                     <AlertDialogFooter>
-                      <AlertDialogCancel variant="destructive" size="default">
+                      <AlertDialogCancel variant="secondary" size="default">
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction

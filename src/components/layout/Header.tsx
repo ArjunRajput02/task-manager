@@ -11,7 +11,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   return (
-    <header className="flex items-center h-16 px-4 md:px-6 border-b bg-background shrink-0">
+    <header className="flex items-center h-16 px-4 md:px-6 border-b bg-white shrink-0">
       <div className="flex items-center flex-1">
         {!mobileSearchOpen && (
           <Button

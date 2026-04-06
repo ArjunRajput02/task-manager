@@ -25,7 +25,7 @@ const taskSlice = createSlice({
     updateTask: (state, action) => {
       const { id, title, description, status } = action.payload;
 
-      const task = state.tasks.find((t) => t.id === id);
+      const task = state.tasks.find((task) => task.id === id);
 
       if (task) {
         task.title = title;
