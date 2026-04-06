@@ -48,19 +48,19 @@ export default function TaskPage() {
           </p>
         )}
 
-        {filteredTasks.map((t) => (
+        {filteredTasks.map((task) => (
           <Card
-            key={t.id}
+            key={task.id}
             className="rounded-2xl border bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-all duration-200"
           >
             <CardContent className="p-4 flex flex-col justify-between h-full space-y-3">
               <h2 className="text-base font-semibold text-gray-800 dark:text-white">
-                {t.title || "Untitled Task"}
+                {task.title || "Untitled Task"}
               </h2>
 
-              {t.description && (
+              {task.description && (
                 <p className="text-sm text-muted-foreground line-clamp-3">
-                  {t.description}
+                  {task.description}
                 </p>
               )}
 
@@ -69,7 +69,7 @@ export default function TaskPage() {
                   variant="ghost"
                   size="icon"
                   onClick={() => {
-                    setEditingTask(t);
+                    setEditingTask(task);
                     setOpen(true);
                   }}
                 >
@@ -99,7 +99,7 @@ export default function TaskPage() {
                       <AlertDialogAction
                         variant="destructive"
                         size="default"
-                        onClick={() => dispatch(deleteTask(t.id))}
+                        onClick={() => dispatch(deleteTask(task.id))}
                       >
                         Delete
                       </AlertDialogAction>
