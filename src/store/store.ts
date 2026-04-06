@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import taskReducer from "./slice/taskSlice";
 import { persistStore, persistReducer } from "redux-persist";
-import { default as storage } from "redux-persist/lib/storage";
+import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
   key: "root",
@@ -9,7 +9,7 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, taskReducer);
-console.log(storage);
+
 export const store = configureStore({
   reducer: {
     tasks: persistedReducer,
