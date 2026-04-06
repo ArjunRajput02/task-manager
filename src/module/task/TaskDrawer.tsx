@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addTask } from "../../store/slice/taskSlice";
+import { useForm } from "react-hook-form";
+import { addTask, updateTask } from "../../store/slice/taskSlice";
+
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
+
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
 } from "../../components/ui/drawer";
+
 import {
   Select,
   SelectContent,
@@ -18,28 +22,63 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 
-export default function TaskDrawer({ open, setOpen }: any) {
+type TaskForm = {
+  title: string;
+  description: string;
+  status: string;
+};
+
+export default function TaskDrawer({ open, setOpen, editingTask }: any) {
   const dispatch = useDispatch();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("todo");
+  const { register, handleSubmit, reset, setValue, watch } = useForm<TaskForm>({
+    defaultValues: {
+      title: "",
+      description: "",
+      status: "todo",
+    },
+  });
 
-  const handleSubmit = () => {
-    if (!title.trim()) return;
+  const status = watch("status");
 
-    dispatch(
-      addTask({
-        id: Date.now().toString(),
-        title,
-        description,
-        status,
-      }),
-    );
+  
+  useEffect(() => {
+    if (editingTask) {
+      reset({
+        title: editingTask.title,
+        description: editingTask.description,
+        status: editingTask.status,
+      });
+    } else {
+      reset({
+        title: "",
+        description: "",
+        status: "todo",
+      });
+    }
+  }, [editingTask, open, reset]);
 
-    setTitle("");
-    setDescription("");
-    setStatus("todo");
+  
+  const onSubmit = (data: TaskForm) => {
+    if (!data.title.trim()) return;
+
+    if (editingTask) {
+      dispatch(
+        updateTask({
+          id: editingTask.id,
+          ...data,
+        }),
+      );
+    } else {
+      dispatch(
+        addTask({
+          id: Date.now().toString(),
+          ...data,
+        }),
+      );
+    }
+
+    reset(); 
     setOpen(false);
   };
 
@@ -47,23 +86,26 @@ export default function TaskDrawer({ open, setOpen }: any) {
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerContent className="p-6">
         <DrawerHeader>
-          <DrawerTitle>Create New Task</DrawerTitle>
+          <DrawerTitle>
+            {editingTask ? "Update Task" : "Create New Task"}
+          </DrawerTitle>
         </DrawerHeader>
 
-        <div className="space-y-4 mt-4">
-          <Input
-            placeholder="Task title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
+          
+          <Input placeholder="Task title" {...register("title")} />
 
+          
           <Textarea
             placeholder="Task description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            {...register("description")}
           />
 
-          <Select value={status} onValueChange={setStatus}>
+          
+          <Select
+            value={status}
+            onValueChange={(value) => setValue("status", value)}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
@@ -75,10 +117,11 @@ export default function TaskDrawer({ open, setOpen }: any) {
             </SelectContent>
           </Select>
 
-          <Button onClick={handleSubmit} className="w-full">
-            Add Task
+        
+          <Button type="submit" className="w-full">
+            {editingTask ? "Update Task" : "Add Task"}
           </Button>
-        </div>
+        </form>
       </DrawerContent>
     </Drawer>
   );
