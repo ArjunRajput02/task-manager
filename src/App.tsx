@@ -1,11 +1,11 @@
-import AppLayout from "./components/layout/AppLayout";
-import TaskPage from "./module/task/TaskPage";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
-    <AppLayout>
-      <TaskPage />
-    </AppLayout>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }
 

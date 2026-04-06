@@ -24,6 +24,7 @@ export default function TaskModal({ open, setOpen, editingTask }: any) {
       title: "",
       description: "",
       status: "todo",
+      dueDate: "",
     },
   });
 
@@ -35,12 +36,14 @@ export default function TaskModal({ open, setOpen, editingTask }: any) {
         title: editingTask.title,
         description: editingTask.description,
         status: editingTask.status,
+        dueDate: editingTask.dueDate,
       });
     } else {
       reset({
         title: "",
         description: "",
         status: "todo",
+        dueDate: "",
       });
     }
   }, [editingTask, open, reset]);
@@ -68,13 +71,12 @@ export default function TaskModal({ open, setOpen, editingTask }: any) {
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={() => setOpen(false)} 
+      onClick={() => setOpen(false)}
     >
       <div
         className="bg-white rounded-xl w-full max-w-md p-6 shadow-lg relative"
-        onClick={(e) => e.stopPropagation()} 
+        onClick={(e) => e.stopPropagation()}
       >
-        
         <button
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
           onClick={() => setOpen(false)}
@@ -92,6 +94,12 @@ export default function TaskModal({ open, setOpen, editingTask }: any) {
           <Textarea
             placeholder="Task description"
             {...register("description")}
+          />
+
+          <input
+            type="date"
+            {...register("dueDate")}
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <Select

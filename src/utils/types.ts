@@ -3,6 +3,7 @@ export type Task = {
   title: string;
   description?: string;
   status: string;
+  dueDate:string
 };
 
 export type TaskState = {
@@ -20,3 +21,4 @@ export type StatusFilterProps = {
   statusFilter: Status;
   setStatusFilter: (status: Status) => void;
 };
+
