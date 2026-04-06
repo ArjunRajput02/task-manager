@@ -14,8 +14,9 @@ export type HeaderProps ={
   onMenuClick: () => void;
 }
 
-export type TaskForm = {
-  title: string;
-  description: string;
-  status: string;
+export type Status = string;
+
+export type StatusFilterProps = {
+  statusFilter: Status;
+  setStatusFilter: (status: Status) => void;
 };

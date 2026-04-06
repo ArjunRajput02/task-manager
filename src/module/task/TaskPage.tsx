@@ -5,7 +5,7 @@ import type { RootState } from "../../store/store";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Trash2, Plus, Pencil } from "lucide-react";
-import TaskDrawer from "./TaskDrawer";
+import TaskModal from "./TaskModal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,17 +23,24 @@ import Filter from "../../components/layout/Filter";
 export default function TaskPage() {
   const dispatch = useDispatch();
   const { tasks, searchQuery } = useSelector((state: RootState) => state.tasks);
-  const filteredTasks = tasks.filter((task) =>
-    `${task.title} ${task.description || ""}`
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch = `${task.title} ${task.description || ""}`
       .toLowerCase()
-      .includes(searchQuery.toLowerCase().trim()),
-  );
+      .includes(searchQuery.toLowerCase().trim());
+
+    const matchesStatus =
+      statusFilter === "ALL" ||
+      task.status.toLowerCase().trim() === statusFilter.toLowerCase().trim();
+
+    return matchesSearch && matchesStatus;
+  });
   const [open, setOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
-  
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-6">
+      <Filter statusFilter={statusFilter} setStatusFilter={setStatusFilter} />
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold">My Tasks</h1>
 
@@ -44,7 +51,7 @@ export default function TaskPage() {
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
-        {tasks.length === 0 && (
+        {filteredTasks.length === 0 && (
           <p className="text-sm text-muted-foreground text-center col-span-full">
             No tasks yet. Add one
           </p>
@@ -59,6 +66,19 @@ export default function TaskPage() {
               <h2 className="text-base font-semibold text-gray-800 dark:text-white">
                 {task.title || "Untitled Task"}
               </h2>
+
+              <span
+                className={`text-xs font-medium px-2 py-1 rounded-full self-start
+      ${
+        task.status === "done"
+          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+          : task.status === "inprogress"
+            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+            : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+      }`}
+              >
+                {task.status}
+              </span>
 
               {task.description && (
                 <p className="text-sm text-muted-foreground line-clamp-3">
@@ -114,9 +134,9 @@ export default function TaskPage() {
         ))}
       </div>
 
-      <TaskDrawer
+      <TaskModal
         open={open}
-        setOpen={(val:boolean) => {
+        setOpen={(val: boolean) => {
           setOpen(val);
           if (!val) setEditingTask(null);
         }}

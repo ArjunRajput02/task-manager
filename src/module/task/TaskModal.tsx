@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { addTask, updateTask } from "../../store/slice/taskSlice";
@@ -7,13 +8,7 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "../../components/ui/drawer";
-import type { TaskForm } from "../../utils/types";
+import type { Task } from "../../utils/types";
 import {
   Select,
   SelectContent,
@@ -22,10 +17,10 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 
-export default function TaskDrawer({ open, setOpen, editingTask }: any) {
+export default function TaskModal({ open, setOpen, editingTask }: any) {
   const dispatch = useDispatch();
 
-  const { register, handleSubmit, reset, setValue, watch } = useForm<TaskForm>({
+  const { register, handleSubmit, reset, setValue, watch } = useForm<Task>({
     defaultValues: {
       title: "",
       description: "",
@@ -51,39 +46,48 @@ export default function TaskDrawer({ open, setOpen, editingTask }: any) {
     }
   }, [editingTask, open, reset]);
 
-  const onSubmit = (data: TaskForm) => {
+  const onSubmit = (data: Task) => {
     if (!data.title.trim()) return;
 
     if (editingTask) {
       dispatch(
         updateTask({
-          id: editingTask.id,
           ...data,
+          id: editingTask.id,
         }),
       );
     } else {
-      dispatch(
-        addTask({
-          id: Date.now().toString(),
-          ...data,
-        }),
-      );
+      dispatch(addTask({ ...data }));
     }
 
     reset();
     setOpen(false);
   };
 
-  return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerContent className="p-6">
-        <DrawerHeader>
-          <DrawerTitle>
-            {editingTask ? "Update Task" : "Create New Task"}
-          </DrawerTitle>
-        </DrawerHeader>
+  if (!open) return null;
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
+  return createPortal(
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onClick={() => setOpen(false)} 
+    >
+      <div
+        className="bg-white rounded-xl w-full max-w-md p-6 shadow-lg relative"
+        onClick={(e) => e.stopPropagation()} 
+      >
+        
+        <button
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+          onClick={() => setOpen(false)}
+        >
+          ✕
+        </button>
+
+        <h2 className="text-xl font-semibold mb-4">
+          {editingTask ? "Update Task" : "Create New Task"}
+        </h2>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Input placeholder="Task title" {...register("title")} />
 
           <Textarea
@@ -110,7 +114,8 @@ export default function TaskDrawer({ open, setOpen, editingTask }: any) {
             {editingTask ? "Update Task" : "Add Task"}
           </Button>
         </form>
-      </DrawerContent>
-    </Drawer>
+      </div>
+    </div>,
+    document.body,
   );
 }

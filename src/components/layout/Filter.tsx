@@ -1,17 +1,11 @@
 import { Button } from "../../components/ui/button";
-
-type Status = string;
-
-type StatusFilterProps = {
-  statusFilter: Status;
-  setStatusFilter: (status: Status) => void;
-};
+import type { StatusFilterProps, Status } from "../../utils/types";
 
 export default function Filter({
   statusFilter,
   setStatusFilter,
 }: StatusFilterProps) {
-  const statuses: Status[] = ["ALL", "TODO", "IN_PROGRESS", "DONE"];
+  const statuses: Status[] = ["ALL", "Todo", "InProgress", "Done"];
 
   return (
     <div className="flex gap-2 flex-wrap">
@@ -22,7 +16,7 @@ export default function Filter({
           onClick={() => setStatusFilter(status)}
           className="text-xs"
         >
-          {status === "IN_PROGRESS" ? "In Progress" : status}
+          {status === "InProgress" ? "In Progress" : status}
         </Button>
       ))}
     </div>
