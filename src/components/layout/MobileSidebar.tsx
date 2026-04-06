@@ -9,7 +9,6 @@ export default function MobileSidebar({
 }) {
   return (
     <>
-
       {open && (
         <div
           className="fixed inset-0 bg-black/40 z-40 md:hidden"

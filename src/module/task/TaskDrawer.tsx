@@ -13,7 +13,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "../../components/ui/drawer";
-
+import type { TaskForm } from "../../utils/types";
 import {
   Select,
   SelectContent,
@@ -21,12 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select";
-
-type TaskForm = {
-  title: string;
-  description: string;
-  status: string;
-};
 
 export default function TaskDrawer({ open, setOpen, editingTask }: any) {
   const dispatch = useDispatch();
@@ -41,7 +35,6 @@ export default function TaskDrawer({ open, setOpen, editingTask }: any) {
 
   const status = watch("status");
 
-  
   useEffect(() => {
     if (editingTask) {
       reset({
@@ -58,7 +51,6 @@ export default function TaskDrawer({ open, setOpen, editingTask }: any) {
     }
   }, [editingTask, open, reset]);
 
-  
   const onSubmit = (data: TaskForm) => {
     if (!data.title.trim()) return;
 
@@ -78,7 +70,7 @@ export default function TaskDrawer({ open, setOpen, editingTask }: any) {
       );
     }
 
-    reset(); 
+    reset();
     setOpen(false);
   };
 
@@ -92,16 +84,13 @@ export default function TaskDrawer({ open, setOpen, editingTask }: any) {
         </DrawerHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
-          
           <Input placeholder="Task title" {...register("title")} />
 
-          
           <Textarea
             placeholder="Task description"
             {...register("description")}
           />
 
-          
           <Select
             value={status}
             onValueChange={(value) => setValue("status", value)}
@@ -117,7 +106,6 @@ export default function TaskDrawer({ open, setOpen, editingTask }: any) {
             </SelectContent>
           </Select>
 
-        
           <Button type="submit" className="w-full">
             {editingTask ? "Update Task" : "Add Task"}
           </Button>

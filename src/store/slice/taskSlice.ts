@@ -1,34 +1,21 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import type { TaskState } from "../../utils/types";
 
-type Task = {
-  id: string;
-  title: string;
-  description?: string;
-  status: string;
-};
-
-type TaskState = {
-  tasks: Task[];
-};
 
 const initialState: TaskState = {
   tasks: [],
+  searchQuery: "",
 };
 
 const taskSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
-    addTask: {
-      reducer: (state, action) => {
-        state.tasks.push(action.payload);
-      },
-      prepare: (task: Omit<Task, "id">) => ({
-        payload: {
-          id: nanoid(),
-          ...task,
-        },
-      }),
+    addTask: (state, action) => {
+      state.tasks.push({
+        id: Date.now().toString(),
+        ...action.payload,
+      });
     },
 
     deleteTask: (state, action) => {
@@ -46,8 +33,12 @@ const taskSlice = createSlice({
         task.status = status;
       }
     },
+    setSearchQuery: (state, action) => {
+      state.searchQuery = action.payload;
+    },
   },
 });
 
-export const { addTask, deleteTask, updateTask } = taskSlice.actions;
+export const { addTask, deleteTask, updateTask, setSearchQuery } =
+  taskSlice.actions;
 export default taskSlice.reducer;

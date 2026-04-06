@@ -6,13 +6,29 @@ import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Trash2, Plus, Pencil } from "lucide-react";
 import TaskDrawer from "./TaskDrawer";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogTrigger,
+} from "../../components/ui/alert-dialog";
+import type { Task } from "../../utils/types";
 
 export default function TaskPage() {
-  console.log("TaskPage rendered");
   const dispatch = useDispatch();
-  const tasks = useSelector((state: RootState) => state.tasks?.tasks || []);
+  const { tasks, searchQuery } = useSelector((state: RootState) => state.tasks);
+  const filteredTasks = tasks.filter((t) =>
+    `${t.title} ${t.description || ""}`
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase().trim()),
+  );
   const [open, setOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState(null);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-6">
@@ -25,20 +41,30 @@ export default function TaskPage() {
         </Button>
       </div>
 
-      <div className="space-y-4">
+      <div className="grid sm:grid-cols-2 gap-4">
         {tasks.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center">
+          <p className="text-sm text-muted-foreground text-center col-span-full">
             No tasks yet. Add one
           </p>
         )}
 
-        {tasks.map((t) => (
+        {filteredTasks.map((t) => (
           <Card
             key={t.id}
-            className="rounded-2xl shadow-sm hover:shadow-md transition"
+            className="rounded-2xl border bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-all duration-200"
           >
-            <CardContent className="p-4 space-y-2">
-              <div className="flex gap-2">
+            <CardContent className="p-4 flex flex-col justify-between h-full space-y-3">
+              <h2 className="text-base font-semibold text-gray-800 dark:text-white">
+                {t.title || "Untitled Task"}
+              </h2>
+
+              {t.description && (
+                <p className="text-sm text-muted-foreground line-clamp-3">
+                  {t.description}
+                </p>
+              )}
+
+              <div className="flex justify-end gap-2 pt-2 border-t">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -50,18 +76,37 @@ export default function TaskPage() {
                   <Pencil className="h-4 w-4 text-blue-500" />
                 </Button>
 
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => dispatch(deleteTask(t.id))}
-                >
-                  <Trash2 className="h-4 w-4 text-red-500" />
-                </Button>
-              </div>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </Button>
+                  </AlertDialogTrigger>
 
-              {t.description && (
-                <p className="text-sm text-muted-foreground">{t.description}</p>
-              )}
+                  <AlertDialogContent className="sm:max-w-md rounded-2xl">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Task?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your task.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+
+                    <AlertDialogFooter>
+                      <AlertDialogCancel variant="destructive" size="default">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        variant="destructive"
+                        size="default"
+                        onClick={() => dispatch(deleteTask(t.id))}
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             </CardContent>
           </Card>
         ))}
@@ -69,7 +114,7 @@ export default function TaskPage() {
 
       <TaskDrawer
         open={open}
-        setOpen={(val) => {
+        setOpen={(val:boolean) => {
           setOpen(val);
           if (!val) setEditingTask(null);
         }}

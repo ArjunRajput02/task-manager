@@ -1,12 +1,12 @@
 import { Menu, Bell, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-
-interface HeaderProps {
-  onMenuClick: () => void;
-}
+import { useDispatch } from "react-redux";
+import { setSearchQuery } from "../../store/slice/taskSlice";
+import type { HeaderProps } from "../../utils/types";
 
 export default function Header({ onMenuClick }: HeaderProps) {
+  const dispatch = useDispatch();
   return (
     <header className="flex items-center justify-between h-16 px-4 md:px-6 border-b bg-background">
       <div className="flex items-center gap-3">
@@ -15,7 +15,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
           size="icon"
           className="md:hidden"
           onClick={() => {
-            console.log("menu clicked");
             onMenuClick();
           }}
         >
@@ -30,6 +29,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           <Input
             placeholder="Search tasks..."
             className="pl-9 pr-4 py-2 rounded-full bg-muted/50 border-none focus-visible:ring-1"
+            onChange={(e) => dispatch(setSearchQuery(e.target.value))}
           />
         </div>
       </div>
