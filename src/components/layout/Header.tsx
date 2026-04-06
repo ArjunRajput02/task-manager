@@ -24,9 +24,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
           </Button>
         )}
       </div>
-
       {mobileSearchOpen ? (
-        
         <div className="flex items-center flex-1 gap-2 sm:hidden">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -37,11 +35,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
               onChange={(e) => dispatch(setSearchQuery(e.target.value))}
             />
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMobileSearchOpen(false)}
-          >
+          <Button variant="ghost" size="icon" onClick={() => setMobileSearchOpen(false)}>
             <X className="h-5 w-5" />
           </Button>
         </div>
@@ -56,8 +50,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </div>
       )}
 
-     
-      <div className="flex items-center gap-2 justify-end">
+      <div className="flex items-center gap-2 flex-1 justify-end">
         {!mobileSearchOpen && (
           <Button
             variant="ghost"
