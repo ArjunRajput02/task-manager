@@ -39,7 +39,7 @@ export default function TaskPage() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-6">
+    <div className="p-6 max-w-3xl mx-auto space-y-6 ">
       <Filter statusFilter={statusFilter} setStatusFilter={setStatusFilter} />
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold">My Tasks</h1>
@@ -50,7 +50,7 @@ export default function TaskPage() {
         </Button>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-2 gap-4 auto-rows-fr">
         {filteredTasks.length === 0 && (
           <p className="text-sm text-muted-foreground text-center col-span-full">
             No tasks yet. Add one
@@ -62,7 +62,7 @@ export default function TaskPage() {
             key={task.id}
             className="rounded-2xl border bg-white dark:bg-neutral-900 shadow-sm hover:shadow-lg transition-all duration-200"
           >
-            <CardContent className="p-4 flex flex-col justify-between h-full space-y-3">
+            <CardContent className="p-4 flex flex-col justify-between h-56 space-y-3 min-h-56">
               <h2 className="text-base font-semibold text-gray-800 dark:text-white">
                 {task.title || "Untitled Task"}
               </h2>
