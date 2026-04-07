@@ -43,7 +43,7 @@ export default function CalendarPage() {
     
       <Calendar
         value={current}
-        onChange={setCurrent}
+        onChange={(value) => setCurrent(value as Date)}
         view="month"
         showNavigation={false} 
         tileContent={({ date, view }) => {

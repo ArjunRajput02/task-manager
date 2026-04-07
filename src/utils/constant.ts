@@ -1,12 +1,7 @@
-import {
-  LayoutDashboard,
-  CheckSquare,
-  Calendar,
-
-} from "lucide-react";
+import { LayoutDashboard, Calendar } from "lucide-react";
 
 export const navItems = [
-  { name: "Dashboard", icon: LayoutDashboard },
-  { name: "Tasks", icon: CheckSquare },
-  { name: "Calendar", icon: Calendar },
+  { name: "Dashboard", icon: LayoutDashboard,path: "/" },
+
+  { name: "Calendar", icon: Calendar,path: "/calendar" },
 ];
