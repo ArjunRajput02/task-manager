@@ -16,7 +16,7 @@ export default function CalendarPage() {
   const [current, setCurrent] = useState(new Date());
 
   const getTasksForDate = (date: Date) =>
-    tasks.filter((t) => t.dueDate === format(date, "yyyy-MM-dd"));
+    tasks.filter((task) => task.dueDate === format(date, "yyyy-MM-dd"));
 
   return (
     <div className="p-6 max-w-4xl mx-auto min-h-screen bg-gray-50 rounded-lg">
